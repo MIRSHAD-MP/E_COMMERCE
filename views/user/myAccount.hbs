@@ -1,0 +1,262 @@
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active" aria-current="page">
+              <h5>MY ACCOUNT</h5>
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBj-1KIYtvjs4ft-nBOoDvTshg3UtK02xhhA&usqp=CAU"
+              alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3">{{userDetails.name}}</h5>
+            <div class="d-flex justify-content-center mb-2">
+              <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal"
+                data-whatever="@mdo">Edit Profile</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4 mb-lg-0">
+          <div class="card-body p-0">
+            <ul class="list-group list-group-flush rounded-3">
+              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <button type="button" class="btn-secondary" data-toggle="modal" data-target="#exampleModa2"
+                  data-whatever="@fat">Add Address</button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Name</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{userDetails.name}}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Email</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{userDetails.email}}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">Phone</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{userDetails.phone}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="d-flex col-md-12">
+            {{#each address}}
+            <div class="card mb-4 col-md-6" style="width: 20rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{name}}</h5>
+                <h5 class="card-title">{{phone}}</h5>
+                <p class="card-text">{{building_name}}, {{street_name}}, {{city}}</p>
+                <p class="card-text">{{district}}</p>
+                <p class="card-text">{{state}}</p>
+                <p class="card-text">{{pincode}}</p>
+                <button type="button" class="btn-success" data-toggle="modal" data-target="#exampleModa3"
+                  data-whatever="@fat">Edit</button>
+                <button type="submit" class="btn-danger">Delete</button>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">EDIT PROFILE</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/edit-profile" method="post">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Name</label>
+            <input type="text" class="form-control" id="recipient-name" name="name" required placeholder={{userDetails.name}} >
+          </div>
+          <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+          <button type="submit" class="btn btn-success">UPDATE</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModa2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ADD ADDRESS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/add-address" method="post">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Name</label>
+            <input type="text" class="form-control" name="name" id="recipient-name" placeholder="Full Name" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" id="recipient-name" placeholder="Phone" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Building Name</label>
+            <input type="text" class="form-control" name="building" id="recipient-name" placeholder="Building Name" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Street Name</label>
+            <input type="text" class="form-control" name="street" id="recipient-name" placeholder="Street Name" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">City</label>
+            <input type="text" class="form-control" name="city" id="recipient-name" placeholder="City" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">District</label>
+            <input type="text" class="form-control" name="district" id="recipient-name" placeholder="District" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">State</label>
+            <input type="text" class="form-control" name="state" id="recipient-name" placeholder="State" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Pincode</label>
+            <input type="text" class="form-control" name="pincode" id="recipient-name" placeholder="Pincode" required>
+          </div>
+          <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+          <button type="submit" class="btn btn-success">ADD ADDRESS</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModa3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">EDIT ADDRESS</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/edit-address" method="post">
+          <div class="form-group">
+            <input type="text" name="addressId" id="recipient-name" value="{{Addresses._addId}}" hidden>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Name</label>
+            <input type="text" class="form-control" name="name" id="recipient-name" placeholder="Full Name" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Phone</label>
+            <input type="text" class="form-control" name="phone" id="recipient-name" placeholder="Phone" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Building Name</label>
+            <input type="text" class="form-control" name="building" id="recipient-name" placeholder="Building Name" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Street Name</label> 
+            <input type="text" class="form-control" name="street" id="recipient-name" placeholder="Street Name" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">City</label>
+            <input type="text" class="form-control" name="city" id="recipient-name" placeholder="City" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">District</label>
+            <input type="text" class="form-control" name="district" id="recipient-name" placeholder="District" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">State</label>
+            <input type="text" class="form-control" name="state" id="recipient-name" placeholder="State" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Pincode</label>
+            <input type="text" class="form-control" name="pincode" id="recipient-name" placeholder="Pincode" required>
+          </div>
+          <button type="button" class="btn btn-warning" data-dismiss="modal">CLOSE</button>
+          <button type="submit" class="btn btn-success">EDIT ADDRESS</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#exampleModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var recipient = button.data('whatever') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    var modal = $(this)
+    modal.find('.modal-title').text('New message to ' + recipient)
+    modal.find('.modal-body input').val(recipient)
+  })
+</script>
+
+<script>
+  $('#exampleModa2').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var recipient = button.data('whatever') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    var modal = $(this)
+    modal.find('.modal-title').text('New message to ' + recipient)
+    modal.find('.modal-body input').val(recipient)
+  })
+</script>
+
+<script>
+  $('#exampleModa3').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var recipient = button.data('whatever') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    var modal = $(this)
+    modal.find('.modal-title').text('New message to ' + recipient)
+    modal.find('.modal-body input').val(recipient)
+  })
+</script>

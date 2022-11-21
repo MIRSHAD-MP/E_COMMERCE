@@ -1,0 +1,155 @@
+{{!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ----------> --}}
+
+    <aside id="left-panel" class="left-panel">
+        <nav class="navbar navbar-expand-sm navbar-default">
+            <div id="main-menu" class="main-menu collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="/admin"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>USERS</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><i class="menu-icon fa fa-user-circle-o"></i><a href='/admin/users'>Users List</a></li>
+                            <li><i class="menu-icon fa fa-star"></i><a href="#">Users Review</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>CATEGORY</a>
+                        <ul class="sub-menu children dropdown-menu">                         
+                            <li><i class="fa fa-bars"></i><a href='/admin/add-category'>Add Category </a></li>
+                            <li><i class="fa fa-bars"></i><a href='/admin/view-category'>View Category </a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>SUB CATEGORY</a>
+                        <ul class="sub-menu children dropdown-menu">                         
+                            <li><i class="fa fa-bars"></i><a href='/admin/add-subcategory'>Add SubCategory </a></li>
+                            <li><i class="fa fa-bars"></i><a href='/admin/view-subCategory'>View SubCategory </a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>PRODUCTS</a>
+                        <ul class="sub-menu children dropdown-menu">                         
+                            <li><i class="fa fa-bars"></i><a href='/admin/add-product'>Add products</a></li>
+                            <li><i class="fa fa-bars"></i><a href="/admin/view-product">View all Products</a></li>
+                        </ul>
+                    </li>
+                    {{!-- <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>BANNER</a>
+                        <ul class="sub-menu children dropdown-menu">                         
+                            <li><i class="fa fa-bars"></i><a href='/admin/addBanner'>Add Banner</a></li>
+                            <li><i class="fa fa-bars"></i><a href="ui-tabs">Banner management</a></li>
+                        </ul>
+                    </li> --}}
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-first-order"></i>ORDERS</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><i class="fa fa-table"></i><a href="/admin/view-order">All orders</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>COUPONS</a>
+                    </li>
+                    <li class="menu-item-has-children dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-user"></i>ACCOUNT</a>
+                        <ul class="sub-menu children dropdown-menu">
+                            <li><i class="fa fa-sign-out"></i><a href="/admin/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </nav>
+    </aside>
+    
+<form class="form-horizontal" action="/admin/add-product" method="post" enctype="multipart/form-data">
+<fieldset>
+
+<!-- Form Name -->
+<legend style="text-align: center; padding-top: 80px;">ADD PRODUCTS</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="product_id">PRODUCT NAME</label>  
+  <div class="col-md-4">
+  <input id="product_id" name="product_name" placeholder="PRODUCT NAME" class="form-control input-md" required="" type="text">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="product_name">BRAND NAME</label>  
+  <div class="col-md-4">
+  <input id="product_name" name="brand_name" placeholder="BRAND NAME" class="form-control input-md" required=""  type="text">
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="product_name_fr">PRODUCT PRICE</label>  
+  <div class="col-md-4">
+  <input id="product_name_fr" name="product_price" placeholder="PRODUCT PRICE" class="form-control input-md" required="" type="text">
+  </div>
+</div>
+
+<!-- Textarea -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="product_description">PRODUCT DESCRIPTION</label>
+  <div class="col-md-4">                     
+    <textarea class="form-control" id="product_description" name="product_description"></textarea>
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="available_quantity">AVAILABLE QUANTITY</label>  
+  <div class="col-md-4">
+  <input id="available_quantity" name="available_quantity" placeholder="AVAILABLE QUANTITY" class="form-control input-md" required="" type="text">
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="product_categorie">PRODUCT CATEGORY</label>
+  <div class="col-md-4">
+    <select id="product_categorie" name="product_category" class="form-control">
+      <option value=""></option>
+      {{#each categories}}
+      <option value="{{this.category_name}}">{{this.category_name}}</option>
+      {{/each}}
+    </select>
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="product_categorie">PRODUCT SUB CATEGORY</label>
+  <div class="col-md-4">
+    <select id="product_categorie" name="product_subcategory" class="form-control">
+      <option value=""></option>
+      {{#each subcategories}}
+      <option value="{{this.subcategory_name}}">{{this.subcategory_name}}</option>
+      {{/each}}
+    </select>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="form-group">
+    <input type="file" class="form-control-file" name="uploaded_file" required multiple />
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group" style="text-align: center;">
+  <label class="col-md-4 control-label" for="singlebutton"></label>
+  <div class="col-md-4">
+    <button type="submit" id="singlebutton" class="btn btn-dark">ADD PRODUCTS</button>
+  </div>
+  </div>
+</fieldset>
+</form>

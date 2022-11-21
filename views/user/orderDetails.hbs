@@ -1,0 +1,69 @@
+<section>
+    <div class="container">
+        <table id="orderTable" class="border rounded border-secondary table mt-5">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">DATE</th>
+                    <th scope="col">IMAGE</th>
+                    <th scope="col">PRODUCT NAME</th>
+                    <th scope="col">CATEGORY</th>
+                    <th scope="col">SUB CATEGORY</th>
+                    <th scope="col">QUANTITY</th>
+                    <th scope="col">ADDRESS</th>
+                    <th scope="col">AMOUNT</th>
+                    <th scope="col">PAYMENT</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{this.date}}<br>{{this.time}}</td>
+                    <td><img src="/uploads/{{this.image.[3]}}" alt="Loading"></td>
+                    <td>{{this.product_name}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.sub_category}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.deliveryDetails.name}}<br>
+                        {{this.deliveryDetails.building_name}}<br>
+                        {{this.deliveryDetails.street_name}}</td>
+                    <td>{{this.totalAmount}}</td>
+                    <td>{{this.payment}}</td>
+                    <td>{{this.status}}</td>
+                    <td><a onclick="cancelOrder('{{this._id}}','{{this.product._id}}')"><button class="btn-danger">CANCEL</button></a></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    </div>
+</section>
+
+<script>
+    function cancelOrder(orderId,proId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to cancel this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#008000',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes,!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/cancel-order',
+                    data: {
+                        order: orderId,
+                        product: proId,
+                    },
+                    method: "post",
+                    success: (response) => {
+                        alert("DONE")
+                    }
+                })
+            }
+        })
+    }
+</script>

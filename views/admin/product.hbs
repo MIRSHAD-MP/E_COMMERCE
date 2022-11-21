@@ -1,0 +1,120 @@
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/admin"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-users"></i>USERS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-user-circle-o"></i><a href='/admin/users'>Users List</a></li>
+                        <li><i class="menu-icon fa fa-star"></i><a href="#">Users Review</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>CATEGORY</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-category'>Add Category </a></li>
+                        <li><i class="fa fa-bars"></i><a href='/admin/view-category'>View Category </a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>SUB CATEGORY</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-subcategory'>Add SubCategory </a></li>
+                        <li><i class="fa fa-bars"></i><a href='/admin/view-subCategory'>View SubCategory </a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>PRODUCTS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-product'>Add products</a></li>
+                        <li><i class="fa fa-bars"></i><a href="/admin/view-product">View all Products</a></li>
+                    </ul>
+                </li>
+                {{!-- <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>BANNER</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/addBanner'>Add Banner</a></li>
+                        <li><i class="fa fa-bars"></i><a href="ui-tabs">Banner management</a></li>
+                    </ul>
+                </li> --}}
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-first-order"></i>ORDERS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-table"></i><a href="/admin/view-order">All orders</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>COUPONS</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-user"></i>ACCOUNT</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-sign-out"></i><a href="/admin/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside>
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong class="card-title">Product Data</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table" id="table_id">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Brand Name</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Sub Category</th>
+                                    <th>Image</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each products}}
+                                <tr>
+                                    <td>{{this.product_name}}</td>
+                                    <td>{{this.brand_name}}</td>
+                                    <td>{{this.product_price}}</td>
+                                    <td>{{this.product_category}}</td>
+                                    <td>{{this.product_subcategory}}</td>
+                                    <td><img style="width:50px;height:50px" src="/uploads/{{this.images.[0]}}" alt="">
+                                    </td>
+                                    <td><a href="/admin/edit-product/{{this._id}}" class="btn btn-primary">Edit</a></td>
+                                    <td><a href="/admin/delete-product/{{this._id}}" class="btn btn-danger">Delete</a></td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- .animated -->
+</div><!-- .content -->
+<div class="clearfix"></div>
+</div><!-- /#right-panel -->
+
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable();
+    });
+</script>

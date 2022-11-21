@@ -1,0 +1,157 @@
+<aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+        <div id="main-menu" class="main-menu collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/admin"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-users"></i>USERS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="menu-icon fa fa-user-circle-o"></i><a href='/admin/users'>Users List</a></li>
+                        <li><i class="menu-icon fa fa-star"></i><a href="#">Users Review</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>CATEGORY</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-category'>Add Category </a></li>
+                        <li><i class="fa fa-bars"></i><a href='/admin/view-category'>View Category </a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>SUB CATEGORY</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-subcategory'>Add SubCategory </a></li>
+                        <li><i class="fa fa-bars"></i><a href='/admin/view-subCategory'>View SubCategory</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>PRODUCTS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-product'>Add products</a></li>
+                        <li><i class="fa fa-bars"></i><a href="/admin/view-product">View all Products</a></li>
+                    </ul>
+                </li>
+                {{!-- <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>BANNER</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/addBanner'>Add Banner</a></li>
+                        <li><i class="fa fa-bars"></i><a href="ui-tabs">Banner management</a></li>
+                    </ul>
+                </li> --}}
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-first-order"></i>ORDERS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-table"></i><a href="/admin/view-order">All orders</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>COUPONS</a>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-user"></i>ACCOUNT</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-sign-out"></i><a href="/admin/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</aside>
+
+<section>
+    <div class="container">
+        <table id="orderTable" class="border rounded border-secondary table mt-5">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">DATE</th>
+                    <th scope="col">IMAGE</th>
+                    <th scope="col">PRODUCT NAME</th>
+                    <th scope="col">CATEGORY</th>
+                    <th scope="col">SUB CATEGORY</th>
+                    <th scope="col">QUANTITY</th>
+                    <th scope="col">ADDRESS</th>
+                    <th scope="col">AMOUNT</th>
+                    <th scope="col">PAYMENT</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orderIteam}}
+                <tr>
+                    <td>{{this.date}}<br>{{this.time}}</td>
+                    <td><img src="/uploads/{{this.image.[0]}}" alt="Loading"></td>
+                    <td>{{this.product_name}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.sub_category}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.deliveryDetails.name}}<br>
+                        {{this.deliveryDetails.building_name}}<br>
+                        {{this.deliveryDetails.street_name}}</td>
+                    <td>{{this.totalAmount}}</td>
+                    <td>{{this.payment}}</td>
+                    <td>{{this.status}}</td>
+                     <td>
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+                            {{this.status}}
+                        </button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="changeStatus"
+                                            onsubmit="changeDeliveryStatus('{{this._id}}','{{this.products.item}}')">
+                                            <input type="text" value="{{this._id}}" name="orderId" hidden>
+                                            <input type="text" value="{{this.productId}}" name="productId" hidden>
+                                            <select name="delivery" id="">
+                                                <option value="">{{this.status}}</option>
+                                                <option value="packed">Packed</option>
+                                                <option value="shipped">Shipped</option>
+                                                <option value="delivered">Delivered</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-success">Submit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    </div>
+</section>
+
+<script>
+    function changeDeliveryStatus(orderId, productId) {
+        console.log(orderId, productId)
+        $.ajax({
+            url: '/admin/changeDeliveryStatus',
+            method: 'post',
+            data: $('#changeStatus' + orderId + productId).serialize(),
+            success: (response) => {
+                location.reload()
+            }
+        })
+    }
+</script>
+                   

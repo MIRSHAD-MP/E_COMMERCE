@@ -1,0 +1,336 @@
+<section class="checkout spad">
+    <div class="container">
+        <form action="/checkout" method="post" class="checkout__form" id="checkout-form">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h5>Billing detail</h5>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>Full Name <span>*</span></p>
+                                <input type="text" name="name" id="name">
+                                <p class="colorError"><span id="error-data-first">Enter full name</span></p>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="checkout__form__input">
+                                <input type="text" name="userId" value="{{user._id}}" hidden>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Phone <span>*</span></p>
+                                <input type="tel" name="phone" placeholder="888 888 8888" id="phone" maxlength="10">
+                                <p class="colorError"><span id="error-data-second">Enter mobile number</span></p>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Building Name <span>*</span></p>
+                                <input type="text" name="building" id="building">
+                                <p class="colorError"><span id="error-data-third">Enter building name</span></p>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>Street <span>*</span></p>
+                                <input type="text" name="street" id="street">
+                                <p class="colorError"><span id="error-data-fourth">Enter street name</span></p>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>City <span>*</span></p>
+                                <input type="text" name="city" id="city">
+                                <p class="colorError"><span id="error-data-fifth">City</span></p>
+                            </div>
+                            <div class="checkout__form__input">
+                                <p>District <span>*</span></p>
+                                <input type="text" name="district" id="district">
+                                <p class="colorError"><span id="error-data-sixth">District</span></p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>State <span>*</span></p>
+                                <input type="text" name="state" id="state">
+                                <p class="colorError"><span id="error-data-seventh">State</span></p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="checkout__form__input">
+                                <p>Pincode <span>*</span></p>
+                                <input type="text" name="pincode" id="pincode">
+                                <p class="colorError"><span id="error-data-eight">Pincode</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="checkout__order">
+                        <h5>Your order</h5>
+                        <div class="checkout__order__product">
+                            <ul>
+                                <li>
+                                    <span class="top__text">Product</span>
+                                    <span class="top__text__right">Total</span>
+                                </li>
+                                {{#each products}}
+                                <li>{{this.product.product_name}}<span>{{productTotal}}</span></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="checkout__order__total">
+                            <ul>
+                                <li>Subtotal <span>{{total}}</span></li>
+                                <li>Total <span>{{total}}</span></li>
+                            </ul>
+                        </div>
+                        <div class="checkout__order__widget">
+                            <label for="cod">
+                                CASH ON DELIVERY
+                                <input type="radio" id="cod" name="payment-method" value="cod">
+                                <span class="checkmark"></span>
+                            </label>
+                            <label for="paypal">
+                                RAZORPAY
+                                <input type="radio" id="paypal" name="payment-method" value="online">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="site-btn">Place oder</button>
+                    </div><br>
+                    <div class="row">
+                        <div class="d-flex col-md-12">
+                            {{#each address}}
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{name}}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{phone}}</h6>
+                                    <p class="card-text">{{building_name}}, {{street_name}}</p>
+                                    <p class="card-text">{{city}}</p>
+                                    <p class="card-text">{{district}}</p>
+                                    <p class="card-text">{{state}}</p>
+                                    <p class="card-text">{{pincode}}</p>
+                                    <button onclick="addAddress('{{../user._id}}','{{this._addId}}')" type="submit" class="btn btn-dark ml-4" style="">ADD</button>
+                                </div>
+                            </div>  
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+    </form>
+    </div>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/checkout',
+            method: 'post',
+            data: $('#checkout-form').serialize(),
+            success: (response) => {
+                if (response.codSuccess) {
+                    location.href = '/orderSuccess'
+                } else {
+                    razorpayPayment(response)
+                }
+            }
+        })
+    })
+
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_ypESwqKWXLWATA", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "VIETNAM",
+            "description": "Test Transaction",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScXMeFQWt1Kk1yuCMaFws6rOAOUq8WEd5gBQ&usqp=CAU",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+
+            "handler": function (response) {
+                verifyPayment(response,order)
+            },
+
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    function verifyPayment(payment,order) {
+        $.ajax({
+            url:'/verify-payment',
+            data:{
+                payment,
+                order
+            },
+            method:'post',
+            success:(response) => {
+                if(response.status) {
+                    location.href = '/orderSuccess'
+                } else {
+                    alert("PAYMENT FAILED")
+                }
+            }
+        })
+    }
+</script>
+
+<script>
+  function addAddress(userId,addId) {
+        $.ajax({
+            url: '/checkout',
+            data: {
+                userId: userId,
+                addressId: addId
+            },
+            method: 'post',
+            success: (response) => {
+                if (response) {
+                    document.getElementById('name').value = response.Addresses.name;
+                    document.getElementById('phone').value = response.Addresses.phone;
+                    document.getElementById('building').value = response.Addresses.building_name;
+                    document.getElementById('street').value = response.Addresses.street_name;
+                    document.getElementById('city').value = response.Addresses.city;
+                    document.getElementById('district').value = response.Addresses.district;
+                    document.getElementById('state').value = response.Addresses.state;
+                    document.getElementById('pincode').value = response.Addresses.pincode;
+                } else {
+                    
+                }
+            }
+        })
+    }
+</script>
+
+<script>
+    $(document).ready (function(){
+
+        fullname = "";
+        phone = "";
+        building = "";
+        street = "";
+        city = "";
+        district = "";
+        state = "";
+        pincode = "";
+
+        $(document).on("focusin","#name",function(){
+            $("#error-data-first").hide();
+        })
+         $(document).on("focusout","#name",function(){
+            fullname = $(this).val();
+            if(fullname === "") {
+                $("#error-data-first").show();
+            } else  {
+                $("#error-data-first").hide();
+            }
+            
+        });
+
+         $(document).on("focusin","#phone",function(){
+            $("#error-data-second").hide();
+        })
+         $(document).on("focusout","#phone",function(){
+            phone = $(this).val();
+            if(phone === "") {
+                $("#error-data-second").show();
+            } else  {
+                $("#error-data-second").hide();
+            }
+            
+        });
+
+         $(document).on("focusin","#building",function(){
+            $("#error-data-third").hide();
+        })
+         $(document).on("focusout","#building",function(){
+            building = $(this).val();
+            if(building === "") {
+                $("#error-data-third").show();
+            } else  {
+                $("#error-data-third").hide();
+            }
+            
+        })
+
+         $(document).on("focusin","#street",function(){
+            $("#error-data-fourth").hide();
+        })
+         $(document).on("focusout","#street",function(){
+            street = $(this).val();
+            if(street === "") {
+                $("#error-data-fourth").show();
+            } else  {
+                $("#error-data-fourth").hide();
+            }
+            
+        })
+
+         $(document).on("focusin","#city",function(){
+            $("#error-data-fifth").hide();
+        })
+         $(document).on("focusout","#city",function(){
+            city = $(this).val();
+            if(city === "") {
+                $("#error-data-fifth").show();
+            } else  {
+                $("#error-data-fifth").hide();
+            }
+            
+        })
+
+         $(document).on("focusin","#district",function(){
+            $("#error-data-sixth").hide();
+        })
+         $(document).on("focusout","#district",function(){
+            district = $(this).val();
+            if(district === "") {
+                $("#error-data-sixth").show();
+            } else  {
+                $("#error-data-sixth").hide();
+            }
+            
+        })
+
+         $(document).on("focusin","#state",function(){
+            $("#error-data-seventh").hide();
+        })
+         $(document).on("focusout","#state",function(){
+            state = $(this).val();
+            if(state === "") {
+                $("#error-data-seventh").show();
+            } else  {
+                $("#error-data-seventh").hide();
+            }
+            
+        })
+
+         $(document).on("focusin","#pincode",function(){
+            $("#error-data-eight").hide();
+        })
+         $(document).on("focusout","#pincode",function(){
+            pincode = $(this).val();
+            if(pincode === "") {
+                $("#error-data-eight").show();
+            } else  {
+                $("#error-data-eight").hide();
+            }
+            
+        })
+    })
+</script>
