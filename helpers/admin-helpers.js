@@ -7,9 +7,9 @@ const objectId = require("mongodb").ObjectId;
 
 module.exports = {
   doLogin: (adminData) => {
-    console.log(adminData);
     return new Promise(async (resolve, reject) => {
-      let loginStatus = false;
+      try {
+        let loginStatus = false;
       let response = {};
       let admin = await db
         .get()
@@ -29,24 +29,31 @@ module.exports = {
       } else {
         resolve({ status: false });
       }
+      } catch (error) {
+        reject(error) 
+      }
     });
   },
 
   getAllUsers: (userId) => {
     return new Promise(async (resolve, reject) => {
-      let users = await db
+      try {
+        let users = await db
         .get()
         .collection(collection.USER_COLLECTION)
         .find()
         .toArray();
       resolve(users);
+      } catch (error) {
+        reject(error)
+      }
     });
   },
 
   getOrderProducts: () => {
-    try {
       return new Promise(async (resolve, reject) => {
-        const orderItems = await db
+        try {
+          const orderItems = await db
           .get()
           .collection(collection.ORDER_COLLECTION)
           .aggregate([
@@ -97,10 +104,10 @@ module.exports = {
           ])
           .toArray();
         resolve(orderItems);
+        } catch (error) {
+          reject(error)
+        }
       });
-    } catch (error) {
-      reject(error);
-    }
   },
 
   changedeliveryStatus: (orderId,productId,status) => {
@@ -126,33 +133,33 @@ module.exports = {
 
   getUsersCount:() => {
     let count = 0;
-    try {
       return new Promise (async(resolve,reject) => {
-        const usersCount = await db.get().collection(collection.USER_COLLECTION).count()
+        try {
+          const usersCount = await db.get().collection(collection.USER_COLLECTION).count()
         resolve(usersCount)
+        } catch (error) {
+          reject(error)
+        }
       })
-    } catch (error) {
-      reject(error)
-    }
   },
 
   getProductCount: () => {
     let count = 0;
-    try {
       return new Promise(async(resolve,reject) => {
-        const productCount = await db.get().collection(collection.PRODUCT_COLLECTION).count()
+        try {
+          const productCount = await db.get().collection(collection.PRODUCT_COLLECTION).count()
         resolve(productCount)
+        } catch (error) {
+          reject(error)
+        }
       })
-    } catch (error) {
-      reject(error)
-    }
   },
 
   totalRevenue: () => {
-    try {
       let Total = 0;
       return new Promise(async (resolve, reject) => {
-        let total = await db
+        try {
+          let total = await db
           .get()
           .collection(ORDER_COLLECTION)
           .aggregate([
@@ -186,21 +193,19 @@ module.exports = {
         if (total[0]) {
           let newTotal = total[0].total;
           resolve(newTotal);
-         
         } else {
           resolve(Total);
         }
+        } catch (error) {
+          reject(error)
+        }
       });
-    } catch (error) {
-      reject(error);
-    }
   },
   getSalesCount: () => {
-  console.log("helpers");
     let totalSalesCount = 0;
-    try {
       return new Promise(async (resolve, reject) => {
-        const totalSalesCount = await db
+        try {
+          const totalSalesCount = await db
           .get()
           .collection(collection.ORDER_COLLECTION)
           .aggregate([
@@ -218,22 +223,15 @@ module.exports = {
               $match: {
                 data: "delivered",
               },
-            },
-            {
-              $group: {
-                _id: null,
-                count: {
-                  $sum: 1,
-                },
-              },
-            },
+            }
           ])
           .toArray();
-          console.log(totalSalesCount,"total");
-       resolve(totalSalesCount)
+          resolve(totalSalesCount)
+          console.log(totalSalesCount);
+        } catch (error) {
+          reject(error)
+        }
       });
-    } catch (error) {
-      reject(error);
-    }
+    
   }
 }

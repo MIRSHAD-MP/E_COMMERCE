@@ -11,8 +11,12 @@ module.exports = {
     },
     getAllCategories:()=>{
         return new Promise(async(resolve,reject)=>{
-            let categories = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
+            try {
+                let categories = await db.get().collection(collection.CATEGORY_COLLECTION).find().toArray()
             resolve(categories)
+            } catch (error) {
+                reject(error)
+            }
         })
     }
 }

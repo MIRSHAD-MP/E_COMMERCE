@@ -12,15 +12,23 @@ module.exports = {
 
     getAllSubcategories:()=>{
         return new Promise(async(resolve,reject)=>{
-            let subcategories = await db.get().collection(collection.SUBCATEGORY_COLLECTION).find().toArray()
+            try {
+                let subcategories = await db.get().collection(collection.SUBCATEGORY_COLLECTION).find().toArray()
             resolve(subcategories)
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     getAllproductSubcategories:(category)=>{
         return new Promise(async(resolve,reject)=>{
-            let productSubcategories = await db.get().collection(collection.SUBCATEGORY_COLLECTION).find({product_category: category}).toArray()
+            try {
+                let productSubcategories = await db.get().collection(collection.SUBCATEGORY_COLLECTION).find({product_category: category}).toArray()
             resolve(productSubcategories)
+            } catch (error) {
+                reject(error)
+            }
         })
     }
 

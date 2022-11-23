@@ -1,3 +1,13 @@
+<style>
+    .table td, .table th {
+        padding: 0.75rem !important;
+        font-size: small;
+    }
+    .right-panel {
+        background-color: #fff;
+    }
+</style>
+
 <aside id="left-panel" class="left-panel">
     <nav class="navbar navbar-expand-sm navbar-default">
         <div id="main-menu" class="main-menu collapse navbar-collapse">
@@ -68,10 +78,10 @@
     </nav>
 </aside>
 
-<section>
-    <div class="container">
-        <table id="orderTable" class="border rounded border-secondary table mt-5">
-            <thead class="table-dark">
+<section style="width: 500px;">
+    <div class="container" style="width: 100%;">
+        <table id="orderTable" class="border rounded border-secondary table mt-5" style="width: 100%;">
+            <thead class="table-dark ">
                 <tr>
                     <th scope="col">DATE</th>
                     <th scope="col">IMAGE</th>
@@ -83,7 +93,7 @@
                     <th scope="col">AMOUNT</th>
                     <th scope="col">PAYMENT</th>
                     <th scope="col">STATUS</th>
-                    <th scope="col"></th>
+                    <th scope="col">ACTION</th>
                 </tr>
             </thead>
             <tbody>

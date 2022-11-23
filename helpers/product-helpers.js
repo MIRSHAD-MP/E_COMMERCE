@@ -16,46 +16,68 @@ module.exports = {
 
     getAllProducts:()=>{
         return new Promise(async(resolve,reject)=>{
-            const products = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
-            resolve (products)
+            try {
+                const products = await db.get().collection(collection.PRODUCT_COLLECTION).find().toArray()
+                resolve (products)
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     getSingleProduct:(proId)=>{
         return new Promise(async(resolve,reject)=>{
-            const product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)})
-            resolve(product)
+            try {
+                const product = await db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id:objectId(proId)})
+                resolve(product)
+            } catch (error) {
+                reject(error)
+            }  
         })
     },
 
     getAllproductByCategories:(category)=>{
         return new Promise(async(resolve,reject)=>{
-            const products = await db.get().collection(collection.PRODUCT_COLLECTION).find({product_category: category}).toArray()
+            try {
+                const products = await db.get().collection(collection.PRODUCT_COLLECTION).find({product_category: category}).toArray()
             resolve(products)
+            } catch (error) {
+                reject(error)
+            }
+            
         })
     },
 
     getAllproductBySubCategories:(category, subcategory)=>{
         return new Promise(async(resolve,reject)=>{
-            const products = await db.get().collection(collection.PRODUCT_COLLECTION).find({
-                product_category: category,
-                product_subcategory: subcategory
-            }).toArray()
-            resolve(products)
+            try {
+                const products = await db.get().collection(collection.PRODUCT_COLLECTION).find({
+                    product_category: category,
+                    product_subcategory: subcategory
+                }).toArray()
+                resolve(products)
+            } catch (error) {
+                reject(error)
+            }  
         })
     },
 
     getProductDetails: (proId) => {
         return new Promise(async(resolve,reject)=>{
-             db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id: objectId(proId)}).then((product) => {
-                resolve(product)
-             })
+            try {
+                db.get().collection(collection.PRODUCT_COLLECTION).findOne({_id: objectId(proId)}).then((product) => {
+                    resolve(product)
+                 })
+            } catch (error) {
+                reject(error)
+            }
         })
     },
 
     updateProduct:(proId,proDetails)=>{
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.PRODUCT_COLLECTION).
+            try {
+                db.get().collection(collection.PRODUCT_COLLECTION).
             updateOne({_id: objectId(proId)},{
                 $set:{
                     product_name: proDetails.product_name,
@@ -67,8 +89,10 @@ module.exports = {
             }).then((response)=>{
                 resolve()
             })
+            } catch (error) {
+                reject(error)
+            }
         })
     },
-
     
 }

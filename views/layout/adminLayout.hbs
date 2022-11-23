@@ -67,10 +67,14 @@
     </style>
 </head>
 <body>
-
+{{#if admin}}
     {{>admin-header}}
      {{{body}}}
-     
+     {{else}}
+     {{>admin-header}}
+          {{{body}}}
+          {{/if}}
+
 
    
      
