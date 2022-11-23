@@ -43,7 +43,7 @@ router.get('/login',(req, res) => {
 })
 
 router.get('/signup',(req, res) => {
-  res.render('user/signup',{user:true})  
+  res.render('user/signup')  
 })    
 
 router.post('/signup',(req,res) => {
@@ -303,7 +303,7 @@ router.get('/coming-soon',async(req,res) => {
 
 router.post('/cancel-order',async(req,res) => {
   const user = req.session.user
-  const cancelOrder = await userHelpers.cancelOrder()
+  const cancelOrder = await userHelpers.cancelOrder(req.body)
   res.redirect('/orderDetails')
 })
 

@@ -21,10 +21,12 @@ const verifyLoggedin = (req,res,next) => {
 router.get('/',async(req,res) => {
   let totalUsersCount = 0;
   let totalProductCount = 0;
+  let totalSalesCount = 0;
   if (req.session.loggedIn) {
     totalUsersCount = await adminHelpers.getUsersCount()
     totalProductCount = await adminHelpers.getProductCount()
-    res.render('admin/home',{layout:"adminLayout",admin:true,totalUsersCount,totalProductCount})
+    totalSalesCount = await adminHelpers.getSalesCount()
+    res.render('admin/adminLogin',{layout:"adminLayout",admin:true,totalUsersCount,totalProductCount,totalSalesCount})
   } else
   res.render('admin/adminLogin',{layout:"adminLayout",admin:false});
 })
@@ -32,13 +34,15 @@ router.get('/',async(req,res) => {
 router.post('/adminLogin',(req,res) => {
   let totalUsersCount = 0;
   let totalProductCount = 0;
+  let totalSalesCount = 0;
   adminHelpers.doLogin(req.body).then(async(response) => {
     if(response.status) {
       req.session.loggedIn = true
       req.session.admin = response.admin
       totalUsersCount = await adminHelpers.getUsersCount()
       totalProductCount = await adminHelpers.getProductCount()
-      res.render('admin/home',{layout:"adminLayout", admin:true,totalUsersCount,totalProductCount});
+      totalSalesCount = await adminHelpers.getSalesCount()
+      res.render('admin/home',{layout:"adminLayout", admin:true,totalUsersCount,totalProductCount,totalSalesCount});
     } else {
       req.session.loginErr = true
       res.redirect('admin/adminLogin')
@@ -126,8 +130,9 @@ router.get('/view-order', async (req,res) => {
 })
 
 router.post('/changeDeliveryStatus',async (req,res) => {
-  const status = await adminHelpers.changedeliveryStatus(req.body)
-  res.json(response)
+  console.log(req.body)
+  const status = await adminHelpers.changedeliveryStatus(req.body.orderId,req.body.productId,req.body.status)
+  res.json(status)
 })
 
 module.exports = router;

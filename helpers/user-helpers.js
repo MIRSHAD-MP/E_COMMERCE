@@ -78,7 +78,8 @@ module.exports = {
         const proObj = {
             item : objectId (proId),
             quantity : 1,
-            status: "placed" 
+            status: "placed",
+            isCanceled: false 
         }
         return new Promise (async (resolve,reject) => {
             let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user: objectId(userId)})
@@ -604,13 +605,29 @@ module.exports = {
         })
     },
 
-    cancelOrder:(orderId,proId) => {
+        cancelOrder:(data) => {
         return new Promise (async(resolve,reject) => {
-            const cancel = await db.get().collection(collection.CART_COLLECTION).aggregate([
+             let result = db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
-                    $match:{_id:objectId (orderId)}
+                  $match: {
+                    _id: objectId(data.orderId)
+                  }
+                }, {
+                  $unwind: {
+                    path: '$products'
+                  }
+                }, {
+                  $match: {
+                    "products.item": objectId(data.proId)
+                  }
+                },
+                {
+                    $set: {
+                        isCanceled: true    
+                      }
                 }
-            ])
+              ])
+              resolve()
         })
     },
 }

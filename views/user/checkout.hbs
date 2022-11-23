@@ -105,7 +105,7 @@
                                     <p class="card-text">{{district}}</p>
                                     <p class="card-text">{{state}}</p>
                                     <p class="card-text">{{pincode}}</p>
-                                    <button onclick="addAddress('{{../user._id}}','{{this._addId}}')" type="submit" class="btn btn-dark ml-4" style="">ADD</button>
+                                    <button onclick="addAdress('{{name}}', '{{phone}}', '{{building_name}}','{{street_name}}','{{city}}','{{district}}','{{state}}','{{pincode}}')" type="button" class="btn btn-dark ml-4" style="">ADD</button>
                                 </div>
                             </div>  
                             {{/each}}
@@ -191,29 +191,23 @@
 </script>
 
 <script>
-  function addAddress(userId,addId) {
-        $.ajax({
-            url: '/checkout',
-            data: {
-                userId: userId,
-                addressId: addId
-            },
-            method: 'post',
-            success: (response) => {
-                if (response) {
-                    document.getElementById('name').value = response.Addresses.name;
-                    document.getElementById('phone').value = response.Addresses.phone;
-                    document.getElementById('building').value = response.Addresses.building_name;
-                    document.getElementById('street').value = response.Addresses.street_name;
-                    document.getElementById('city').value = response.Addresses.city;
-                    document.getElementById('district').value = response.Addresses.district;
-                    document.getElementById('state').value = response.Addresses.state;
-                    document.getElementById('pincode').value = response.Addresses.pincode;
-                } else {
-                    
-                }
-            }
-        })
+    function addAdress(name,phone,building_name,street_name,city,district,state,pincode) {
+          document.getElementById('name').value = name;
+          document.getElementById('name').focus()
+                    document.getElementById('phone').value = phone;
+                    document.getElementById('phone').focus()
+                    document.getElementById('building').value = building_name;
+                     document.getElementById('building').focus()
+                    document.getElementById('street').value = street_name;
+                     document.getElementById('street').focus()
+                    document.getElementById('city').value = city;
+                     document.getElementById('city').focus()
+                    document.getElementById('district').value = district;
+                     document.getElementById('district').focus()
+                    document.getElementById('state').value = state;
+                     document.getElementById('state').focus()
+                    document.getElementById('pincode').value = pincode;
+                     document.getElementById('pincode').focus()
     }
 </script>
 

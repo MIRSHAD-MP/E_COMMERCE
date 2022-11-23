@@ -103,10 +103,9 @@ module.exports = {
     }
   },
 
-  changedeliveryStatus: (orderId, productId, value) => {
+  changedeliveryStatus: (orderId,productId,status) => {
     return new Promise(async (resolve, reject) => {
       try {
-        if (value == "delivered") {
           const deliveryStatus = await db
             .get()
             .collection(collection.ORDER_COLLECTION)
@@ -114,27 +113,13 @@ module.exports = {
               { _id: objectId(orderId), "products.item": objectId(productId) },
               {
                 $set: {
-                  "products.$.status": delivery,
+                  "products.$.status": status,
                 },
               }
             );
           resolve(deliveryStatus);
-        } else {
-          const deliveryStatus = await db
-            .get()
-            .collection(collection.ORDER_COLLECTION)
-            .updateOne(
-              { _id: objectId(orderId), "products.item": objectId(productId) },
-              {
-                $set: {
-                  "products.$.status": delivery,
-                },
-              }
-            );
-          resolve(deliveryStatus);
-        }
       } catch (error) {
-        reject(error);
+        console.log(error);
       }
     });
   },
@@ -160,6 +145,95 @@ module.exports = {
       })
     } catch (error) {
       reject(error)
+    }
+  },
+
+  totalRevenue: () => {
+    try {
+      let Total = 0;
+      return new Promise(async (resolve, reject) => {
+        let total = await db
+          .get()
+          .collection(ORDER_COLLECTION)
+          .aggregate([
+            {
+              $unwind: {
+                path: "$products",
+              },
+            },
+            {
+              $project: {
+                data: "$products.orderStatus",
+                totalAmount: 1,
+              },
+            },
+
+            {
+              $match: {
+                data: "delivered",
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                total: {
+                  $sum: "$totalAmount",
+                },
+              },
+            },
+          ])
+          .toArray();
+        if (total[0]) {
+          let newTotal = total[0].total;
+          resolve(newTotal);
+         
+        } else {
+          resolve(Total);
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+  },
+  getSalesCount: () => {
+  console.log("helpers");
+    let totalSalesCount = 0;
+    try {
+      return new Promise(async (resolve, reject) => {
+        const totalSalesCount = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .aggregate([
+            {
+              $unwind: {
+                path: "$products",
+              },
+            },
+            {
+              $project: {
+                data: "$products.status",
+              },
+            },
+            {
+              $match: {
+                data: "delivered",
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: {
+                  $sum: 1,
+                },
+              },
+            },
+          ])
+          .toArray();
+          console.log(totalSalesCount,"total");
+       resolve(totalSalesCount)
+      });
+    } catch (error) {
+      reject(error);
     }
   }
 }

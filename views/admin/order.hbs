@@ -117,10 +117,10 @@
                                     </div>
                                     <div class="modal-body">
                                         <form id="changeStatus"
-                                            onsubmit="changeDeliveryStatus('{{this._id}}','{{this.products.item}}')">
+                                            onsubmit="changeDeliveryStatus('{{this._id}}','{{this.productId}}')">
                                             <input type="text" value="{{this._id}}" name="orderId" hidden>
                                             <input type="text" value="{{this.productId}}" name="productId" hidden>
-                                            <select name="delivery" id="">
+                                            <select name="delivery" id="change" onchange="changeStatus()">
                                                 <option value="">{{this.status}}</option>
                                                 <option value="packed">Packed</option>
                                                 <option value="shipped">Shipped</option>
@@ -141,13 +141,20 @@
     </div>
 </section>
 
+
 <script>
+
+var status = ""
+
+function changeStatus() {
+    const select = document.getElementById('change')
+    status = select.value
+}
     function changeDeliveryStatus(orderId, productId) {
-        console.log(orderId, productId)
         $.ajax({
             url: '/admin/changeDeliveryStatus',
             method: 'post',
-            data: $('#changeStatus' + orderId + productId).serialize(),
+            data: {orderId,productId,status},
             success: (response) => {
                 location.reload()
             }
