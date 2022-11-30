@@ -10,27 +10,27 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         let loginStatus = false;
-      let response = {};
-      let admin = await db
-        .get()
-        .collection(collection.ADMIN_COLLECTION)
-        .findOne({ email: adminData.email });
-      if (admin) {
-        bcrypt.compare(adminData.password, admin.password).then((status) => {
-          if (status) {
-            response.admin = admin;
-            response.status = true;
-            resolve(response);
-            console.log("login success");
-          } else {
-            resolve({ status: false });
-          }
-        });
-      } else {
-        resolve({ status: false });
-      }
+        let response = {};
+        let admin = await db
+          .get()
+          .collection(collection.ADMIN_COLLECTION)
+          .findOne({ email: adminData.email });
+        if (admin) {
+          bcrypt.compare(adminData.password, admin.password).then((status) => {
+            if (status) {
+              response.admin = admin;
+              response.status = true;
+              resolve(response);
+              console.log("login success");
+            } else {
+              resolve({ status: false });
+            }
+          });
+        } else {
+          resolve({ status: false });
+        }
       } catch (error) {
-        reject(error) 
+        reject(error);
       }
     });
   },
@@ -39,21 +39,21 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       try {
         let users = await db
-        .get()
-        .collection(collection.USER_COLLECTION)
-        .find()
-        .toArray();
-      resolve(users);
+          .get()
+          .collection(collection.USER_COLLECTION)
+          .find()
+          .toArray();
+        resolve(users);
       } catch (error) {
-        reject(error)
+        reject(error);
       }
     });
   },
 
   getOrderProducts: () => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const orderItems = await db
+    return new Promise(async (resolve, reject) => {
+      try {
+        const orderItems = await db
           .get()
           .collection(collection.ORDER_COLLECTION)
           .aggregate([
@@ -104,134 +104,295 @@ module.exports = {
           ])
           .toArray();
         resolve(orderItems);
-        } catch (error) {
-          reject(error)
-        }
-      });
-  },
-
-  changedeliveryStatus: (orderId,productId,status) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-          const deliveryStatus = await db
-            .get()
-            .collection(collection.ORDER_COLLECTION)
-            .updateOne(
-              { _id: objectId(orderId), "products.item": objectId(productId) },
-              {
-                $set: {
-                  "products.$.status": status,
-                },
-              }
-            );
-          resolve(deliveryStatus);
       } catch (error) {
-        console.log(error);
+        reject(error);
       }
     });
   },
 
-  getUsersCount:() => {
-    let count = 0;
-      return new Promise (async(resolve,reject) => {
-        try {
-          const usersCount = await db.get().collection(collection.USER_COLLECTION).count()
-        resolve(usersCount)
-        } catch (error) {
-          reject(error)
-        }
-      })
+  changedeliveryStatus: (orderId, productId, status) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const deliveryStatus = await db
+          .get()
+          .collection(collection.ORDER_COLLECTION)
+          .updateOne(
+            { _id: objectId(orderId), "products.item": objectId(productId) },
+            {
+              $set: {
+                "products.$.status": status,
+              },
+            }
+          );
+        resolve(deliveryStatus);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  getUsersCount: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const usersCount = await db
+          .get()
+          .collection(collection.USER_COLLECTION)
+          .count();
+        resolve(usersCount);
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
 
   getProductCount: () => {
-    let count = 0;
-      return new Promise(async(resolve,reject) => {
-        try {
-          const productCount = await db.get().collection(collection.PRODUCT_COLLECTION).count()
-        resolve(productCount)
-        } catch (error) {
-          reject(error)
-        }
-      })
+    return new Promise(async (resolve, reject) => {
+      try {
+        const productCount = await db
+          .get()
+          .collection(collection.PRODUCT_COLLECTION)
+          .count();
+        resolve(productCount);
+      } catch (error) {
+        reject(error);
+      }
+    });
   },
 
+  totalPlaced: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let placed = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $unwind: {
+              path: "$products",
+            },
+          },
+          {
+            $project: {
+              status: "$products.status",
+            },
+          },
+          {
+              $match: {
+                status: "placed",
+              },
+            },
+        ])
+        .toArray();
+      resolve(placed.length);
+      } catch (error) {
+        reject(error)
+      }
+    });
+  },
+  totalPacked: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let packed = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $unwind: {
+              path: "$products",
+            },
+          },
+          {
+            $project: {
+              status: "$products.status",
+            },
+          },
+          {
+              $match: {
+                status: "packed",
+              },
+            },
+        ])
+        .toArray();
+      resolve(packed.length);
+      } catch (error) {
+        reject(error)
+      }
+    });
+  },
+  totalShipped: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let shipped = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $unwind: {
+              path: "$products",
+            },
+          },
+          {
+            $project: {
+              status: "$products.status",
+            },
+          },
+          {
+              $match: {
+                status: "shipped",
+              },
+            },
+        ])
+        .toArray();
+      resolve(shipped.length);
+      } catch (error) {
+        reject(error)
+      }
+    });
+  },
+  totalDelivered: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let delivered = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $unwind: {
+              path: "$products",
+            },
+          },
+          {
+            $project: {
+              status: "$products.status",
+            },
+          },
+          {
+              $match: {
+                status: "delivered",
+              },
+          },
+        ])
+        .toArray();
+      resolve(delivered.length);
+      } catch (error) {
+        reject(error)
+      }
+    });
+  },
+  totalCancelled: () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let cancelled = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $unwind: {
+              path: "$products",
+            },
+          },
+          {
+            $project: {
+              status: "$products.status",
+            },
+          },
+          {
+              $match: {
+                status: "cancelled",
+              },
+            },
+        ])
+        .toArray();
+      resolve(cancelled.length);
+      } catch (error) {
+        reject(error)
+      }
+    });
+  },
+  totalCod:() => {
+    return new Promise (async(resolve,reject) => {
+      try {
+      const cod = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            paymentMethod :"cod"
+          }
+        }
+      ]).toArray()
+      resolve(cod.length)
+      } catch (error) {
+        reject(error)
+      }
+    })
+  },
+  totalOnline:() => {
+    return new Promise (async(resolve,reject) => {
+      try {
+      const online = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        {
+          $match: {
+            paymentMethod :"online"
+          }
+        }
+      ]).toArray()
+      resolve(online.length)
+      } catch (error) {
+        reject(error)
+      }
+    })
+  },
   totalRevenue: () => {
-      let Total = 0;
+    try {
       return new Promise(async (resolve, reject) => {
-        try {
-          let total = await db
-          .get()
-          .collection(ORDER_COLLECTION)
-          .aggregate([
-            {
-              $unwind: {
-                path: "$products",
+        let revenue = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+          {
+            $unwind: {
+              path: "$products",
+            },
+          },
+          {
+            $lookup: {
+              from: "product",
+              localField: "products.item",
+              foreignField: "_id",
+              as: "result",
+            },
+          },
+          {
+            $unwind: {
+              path: "$result",
+            },
+          },
+          {
+            $project: {
+              totalAmount: {
+                $multiply: [
+                  "$products.quantity",
+                  { $toInt: "$result.product_price" },
+                ],
+              },
+              status: "$products.status",
+            },
+          },
+          {
+            $match: {
+              status: "delivered",
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: {
+                $sum: "$totalAmount",
               },
             },
-            {
-              $project: {
-                data: "$products.orderStatus",
-                totalAmount: 1,
-              },
-            },
-
-            {
-              $match: {
-                data: "delivered",
-              },
-            },
-            {
-              $group: {
-                _id: null,
-                total: {
-                  $sum: "$totalAmount",
-                },
-              },
-            },
+          },
           ])
-          .toArray();
-        if (total[0]) {
-          let newTotal = total[0].total;
-          resolve(newTotal);
-        } else {
-          resolve(Total);
-        }
-        } catch (error) {
-          reject(error)
-        }
+          .toArray()
+          resolve(revenue)
       });
-  },
-  getSalesCount: () => {
-    let totalSalesCount = 0;
-      return new Promise(async (resolve, reject) => {
-        try {
-          const totalSalesCount = await db
-          .get()
-          .collection(collection.ORDER_COLLECTION)
-          .aggregate([
-            {
-              $unwind: {
-                path: "$products",
-              },
-            },
-            {
-              $project: {
-                data: "$products.status",
-              },
-            },
-            {
-              $match: {
-                data: "delivered",
-              },
-            }
-          ])
-          .toArray();
-          resolve(totalSalesCount)
-          console.log(totalSalesCount);
-        } catch (error) {
-          reject(error)
-        }
-      });
-    
+    } catch (error) {
+      reject(error);
+    }
   }
-}
+};

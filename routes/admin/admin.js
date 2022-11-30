@@ -9,6 +9,9 @@ const store = require('../../middleware/multer');
 const subcategoryHelpers = require('../../helpers/subcategory-helpers');
 const { log } = require('handlebars');
 const { Db } = require('mongodb');
+const bannerHelpers = require('../../helpers/banner-helpers');
+const couponHelpers = require('../../helpers/coupon-helpers');
+
 const verifyLoggedin = (req,res,next) => {
   if (req.session.loggedIn){
     next()
@@ -20,14 +23,28 @@ const verifyLoggedin = (req,res,next) => {
 //Admin signin
 router.get('/',async(req,res,next) => {
   try {
-    let totalUsersCount = 0;
-    let totalProductCount = 0;
-    let totalSalesCount = 0;
-    if (req.session.loggedIn) {
+    let totalUsersCount = null;
+    let totalProductCount = null;
+    let placed = null;
+    let packed = null;
+    let shipped = null;
+    let delivered = null;
+    let cancelled = null;
+    let cod = null;
+    let online = null;
+    let revenue = null; 
+    if (req.session.adminloggedIn) {
       totalUsersCount = await adminHelpers.getUsersCount()
       totalProductCount = await adminHelpers.getProductCount()
-      totalSalesCount = await adminHelpers.getSalesCount()
-      res.render('admin/home',{layout:"adminLayout",admin:true,totalUsersCount,totalProductCount,totalSalesCount})
+      placed = await adminHelpers.totalPlaced()
+      packed = await adminHelpers.totalPacked()
+      shipped = await adminHelpers.totalShipped()
+      delivered = await adminHelpers.totalDelivered()
+      cancelled = await adminHelpers.totalCancelled()
+      cod = await adminHelpers.totalCod()
+      online = await adminHelpers.totalOnline()
+      revenue = await adminHelpers.totalRevenue()
+      res.render('admin/home',{layout:"adminLayout",admin:true,totalUsersCount,totalProductCount,placed,packed,shipped,delivered,cancelled,cod,online,revenue})
     } else
     res.redirect('/admin/adminLogin');
   } catch (error) {
@@ -38,10 +55,10 @@ router.get('/',async(req,res,next) => {
 
 router.get('/adminLogin',(req,res,next) => {
   try {
-    if (req.session.loggedIn) {
+    if (req.session.adminloggedIn) {
       res.redirect('/admin')
     } else {
-      res.render('admin/adminLogin',{error:req.session.loginErr})
+      res.render('admin/adminLogin',{error:req.session.loginErr,layout:"adminLayout"})
       req.session.loginErr = false
     }
   } catch (error) {
@@ -54,7 +71,7 @@ router.post('/adminLogin',(req,res,next) => {
   try {
     adminHelpers.doLogin(req.body).then(async(response) => {
       if(response.status) {
-        req.session.loggedIn = true
+        req.session.adminloggedIn = true
         req.session.admin = response.admin
         res.redirect('/admin');
       } else {
@@ -130,7 +147,7 @@ router.post('/add-subcategory',async (req,res,next) => {
 
 router.get('/add-product',async (req,res,next) => {
   try {
-    const subcategories = await subcategoryHelpers.getAllSubcategories()
+  const subcategories = await subcategoryHelpers.getAllSubcategories()
  const categories = await categoryHelpers.getAllCategories()
   res.render('admin/add-product',{categories,subcategories,layout:"adminLayout"});
   } catch (error) {
@@ -141,7 +158,7 @@ router.get('/add-product',async (req,res,next) => {
 
 router.post('/add-product',store.array("uploaded_file", 12),(req,res,next) => {
   try {
-    const images = req.files.map((file) => file.filename);
+  const images = req.files.map((file) => file.filename);
   req.body.images = images;
   productHelpers.addProduct(req.body, (result) => {
     res.redirect('/admin/add-product')
@@ -149,7 +166,6 @@ router.post('/add-product',store.array("uploaded_file", 12),(req,res,next) => {
   } catch (error) {
     next(error)
   }
-  
 })
 
 router.get('/view-product',async(req,res,next) => {
@@ -206,18 +222,77 @@ router.get('/view-subCategory',async(req,res,next) => {
 
 router.get('/view-order', async (req,res,next) => {
   try {
-    const orderIteam = await adminHelpers.getOrderProducts()
+  const orderIteam = await adminHelpers.getOrderProducts()
   res.render("admin/order",{layout:"adminLayout",orderIteam})
   } catch (error) {
     next(error)
   }
-  
 })
 
 router.post('/changeDeliveryStatus',async (req,res,next) => {
   try {
+    console.log(req.body);
     const status = await adminHelpers.changedeliveryStatus(req.body.orderId,req.body.productId,req.body.status)
-  res.json(status)
+    res.json(status)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get ('/addBanner',(req,res,next) => {
+  try {
+    res.render('admin/addBanner',{layout:"adminLayout"})
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/addBanner',store.array("uploaded_file", 12),(req,res,next) => {
+  try {
+  const images = req.files.map((file) => file.filename);
+  req.body.images = images;
+  bannerHelpers.addBanner(req.body, (result) => {
+    res.redirect('/admin/addBanner')
+  })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/banners',async(req,res,next) => {
+  try {
+    const banners = await bannerHelpers.getAllBanners()
+    res.render('admin/banners',{layout:"adminLayout",banners})
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get ('/addCoupon',(req,res,next) => {
+  try {
+    res.render('admin/addCoupon',{layout:"adminLayout"})
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/addCoupon',store.array("uploaded_file", 12),(req,res,next) => {
+  try {
+  const images = req.files.map((file) => file.filename);
+  req.body.images = images;
+  couponHelpers.addCoupon(req.body, (result) => {
+    res.redirect('/admin/addCoupon')
+  })
+  } catch (error) {
+    next(error)
+  }
+})
+
+
+router.get('/coupons',async(req,res,next) => {
+  try {
+    const coupons = await couponHelpers.getAllCoupons()
+    res.render('admin/coupons',{layout:"adminLayout",coupons})
   } catch (error) {
     next(error)
   }

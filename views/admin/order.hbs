@@ -1,6 +1,6 @@
 <style>
     .table td, .table th {
-        padding: 0.75rem !important;
+        padding: 0.95rem !important;
         font-size: small;
     }
     .right-panel {
@@ -23,6 +23,21 @@
                         <li><i class="menu-icon fa fa-star"></i><a href="#">Users Review</a></li>
                     </ul>
                 </li>
+                  <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-first-order"></i>ORDERS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-table"></i><a href="/admin/view-order">All orders</a></li>
+                    </ul>
+                </li>
+                 <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>PRODUCTS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/add-product'>Add products</a></li>
+                        <li><i class="fa fa-bars"></i><a href="/admin/view-product">View all Products</a></li>
+                    </ul>
+                </li>
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>CATEGORY</a>
@@ -39,32 +54,22 @@
                         <li><i class="fa fa-bars"></i><a href='/admin/view-subCategory'>View SubCategory</a></li>
                     </ul>
                 </li>
+               
                 <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>PRODUCTS</a>
-                    <ul class="sub-menu children dropdown-menu">
-                        <li><i class="fa fa-bars"></i><a href='/admin/add-product'>Add products</a></li>
-                        <li><i class="fa fa-bars"></i><a href="/admin/view-product">View all Products</a></li>
-                    </ul>
-                </li>
-                {{!-- <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"> <i class="menu-icon fa fa-product-hunt"></i>BANNER</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-bars"></i><a href='/admin/addBanner'>Add Banner</a></li>
-                        <li><i class="fa fa-bars"></i><a href="ui-tabs">Banner management</a></li>
-                    </ul>
-                </li> --}}
-                <li class="menu-item-has-children dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false"> <i class="menu-icon fa fa-first-order"></i>ORDERS</a>
-                    <ul class="sub-menu children dropdown-menu">
-                        <li><i class="fa fa-table"></i><a href="/admin/view-order">All orders</a></li>
+                        <li><i class="fa fa-bars"></i><a href='/admin/banners'>Banner management</a></li>
                     </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"> <i class="menu-icon fa fa-ticket"></i>COUPONS</a>
+                    <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-bars"></i><a href='/admin/addCoupon'>Add Coupon</a></li>
+                        <li><i class="fa fa-bars"></i><a href='/admin/coupons'>View Coupons</a></li>
+                    </ul>
                 </li>
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -74,7 +79,7 @@
                     </ul>
                 </li>
             </ul>
-        </div><!-- /.navbar-collapse -->
+        </div>
     </nav>
 </aside>
 
@@ -93,7 +98,6 @@
                     <th scope="col">AMOUNT</th>
                     <th scope="col">PAYMENT</th>
                     <th scope="col">STATUS</th>
-                    <th scope="col">ACTION</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,9 +114,8 @@
                         {{this.deliveryDetails.street_name}}</td>
                     <td>{{this.totalAmount}}</td>
                     <td>{{this.payment}}</td>
-                    <td>{{this.status}}</td>
                      <td>
-                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+                        <button type="button" class="btn btn-secondary" onclick="changeStatus('{{this._id}}','{{this.productId}}','{{this.status}}')" data-toggle="modal" data-target="#exampleModal">
                             {{this.status}}
                         </button>
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
@@ -127,11 +130,9 @@
                                     </div>
                                     <div class="modal-body">
                                         <form id="changeStatus"
-                                            onsubmit="changeDeliveryStatus('{{this._id}}','{{this.productId}}')">
-                                            <input type="text" value="{{this._id}}" name="orderId" hidden>
-                                            <input type="text" value="{{this.productId}}" name="productId" hidden>
-                                            <select name="delivery" id="change" onchange="changeStatus()">
-                                                <option value="">{{this.status}}</option>
+                                            onsubmit="changeDeliveryStatus()">
+                                            <select name="delivery" id="change" onchange="changeDelivery()">
+                                                <option id="basi" value=""></option>
                                                 <option value="packed">Packed</option>
                                                 <option value="shipped">Shipped</option>
                                                 <option value="delivered">Delivered</option>
@@ -153,14 +154,28 @@
 
 
 <script>
-
+var orderId = ""
+var productId = ""
 var status = ""
 
-function changeStatus() {
+function changeStatus(order,product,st) {
+    console.log(order,product)
+     orderId = order
+     productId = product
+     status = st
+    
+    document.getElementById('basi').innerText = st
+}
+
+function getStatus() {
+    return status
+}
+
+function changeDelivery() {
     const select = document.getElementById('change')
     status = select.value
 }
-    function changeDeliveryStatus(orderId, productId) {
+    function changeDeliveryStatus() {
         $.ajax({
             url: '/admin/changeDeliveryStatus',
             method: 'post',

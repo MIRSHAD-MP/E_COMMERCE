@@ -43,11 +43,11 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="cart__btn">
-                    <a href="/">Continue Shopping</a>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="cart__btn">
+                        <a href="/">Continue Shopping</a>
+                    </div>
                 </div>
-            </div>
         </div>
         <div class="row">
             <div class="col-lg-6">
@@ -56,7 +56,6 @@
                 <div class="cart__total__procced">
                     <h6>Cart total</h6>
                     <ul>
-                        <li>Subtotal <span id="total1">{{totalValue}}</span></li>
                         <li>Total <span id="total2">{{totalValue}}</span></li>
                     </ul>
                     <a href="/checkout" class="primary-btn">Proceed to checkout</a>
@@ -85,7 +84,6 @@
                     location.reload()
                 } else {
                     document.getElementById(proId).innerHTML = quantity + count
-                    document.getElementById('total1').innerHTML = response.total
                     document.getElementById('total2').innerHTML = response.total
                      $( "#cartTable" ).load(window.location.href + " #cartTable" );
                       location.reload()
@@ -124,7 +122,11 @@
             }
         })
     }
+
 </script>
+
+
+
 
 {{else}}
 

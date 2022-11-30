@@ -67,17 +67,15 @@
     </style>
 </head>
 <body>
-{{#if admin}}
+    
+    {{#if admin}}
     {{>admin-header}}
-     {{{body}}}
-     {{else}}
-     {{>admin-header}}
-          {{{body}}}
-          {{/if}}
+    {{{body}}}
+    {{else}}
+    {{>admin-header}}
+    {{{body}}}
+    {{/if}}
 
-
-   
-     
     <script src="assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
     <script src="assets/js/lib/data-table/dataTables.buttons.min.js"></script>
     <script src="assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
@@ -128,8 +126,8 @@
             "use strict";
             // cellPaiChart
             var cellPaiChart = [
-                { label: "RAZORPAY", data: [[1,35]], color: '#008080'},
-                { label: "ONLINE", data: [[1,65]], color: '#FFA500'}
+                { label: "COD", data: {{cod}}, color: '#008080'},
+                { label: "ONLINE", data: {{online}}, color: '#FFA500'}
             ];
             $.plot('#cellPaiChart', cellPaiChart, {
                 series: {
@@ -148,26 +146,6 @@
                 }
 
             });
-            
-            if ($('#traffic-chart').length) {
-                var chart = new Chartist.Line('#traffic-chart', {
-                  labels: ['PLACED', 'PACKED', 'SHIPPED', 'DELIVERED', 'CANCELED'],
-                  series: [
-                  [0, 18000, 35000,  25000,  22000,  0],
-                  [0, 33000, 15000,  20000,  15000,  300],
-                  [0, 15000, 28000,  15000,  30000,  5000]
-                  ]
-              }, {
-                  low: 0,
-                  showArea: true,
-                  showLine: false,
-                  showPoint: false,
-                  fullWidth: true,
-                  axisX: {
-                    showGrid: true
-                }
-            });
-            }
         });
     </script>
 </body>
